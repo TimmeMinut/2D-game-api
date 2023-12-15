@@ -11,9 +11,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+
 namespace twoD
 {
-
 	GameEngine::GameEngine()
 	{
 		SDL_Init(SDL_INIT_EVERYTHING);

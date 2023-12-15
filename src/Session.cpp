@@ -212,5 +212,4 @@ namespace twoD
                 SDL_Delay(delay);
         } // yttre while
     }
-
 }

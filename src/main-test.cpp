@@ -12,6 +12,7 @@
 #include "Sprite.h"
 #include "MovingSprite.h"
 #include "Background.h"
+#include "CollisionHandler.h"
 
 /*
 Background::Background()
@@ -22,10 +23,27 @@ Background::Background()
         4 = left
     Speed:
         Must be positive int
+        0 for static background
 */
 using namespace twoD;
 
 Session ses(60);
+
+void checkCollision(Sprite* sprite)
+{
+    auto sprites = ses.getSprites();
+    for (Sprite *s : sprites)
+    {
+        if (Bullet *b = dynamic_cast<Bullet *>(s))
+        {
+            if (CollisionHandler::collided(*(b->getRect()), *(s->getRect())))
+            {
+                ses.remove(b);
+                ses.remove(s);
+            }
+        }
+    }
+};
 
 class Bullet : public MovingSprite
 {
@@ -34,24 +52,9 @@ public:
 
     void tick()
     {
+        MovingSprite::tick();
         if (getRect()->y < -10 || getRect()->y > ge.getH())
             ses.remove(this);
-
-        switch (getDirection())
-        {
-        case 1:
-            getRect()->y -= 4;
-            break;
-        case 2:
-            getRect()->x += 4;
-            break;
-        case 3:
-            getRect()->y += 4;
-            break;
-        case 4:
-            getRect()->x -= 4;
-            break;
-        }
     }
 };
 
@@ -62,6 +65,7 @@ public:
 
     void tick() override
     {
+        checkCollision(this);
     }
 
     void keyDown(const SDL_Event &eve)
@@ -81,9 +85,9 @@ public:
             }
             break;
         case SDLK_SPACE:
-            // play sound and shoot, creating a bullet object
+            // play sound and shoot, creating a b object
             Mix_PlayChannel(-1, lazer, 0);
-            Bullet *b = new Bullet(getRect()->x + 40, ge.getH() - 120, 10, 50, "images/bullet.png", 1, 10);
+            Bullet *b = new Bullet(getRect()->x + 40, ge.getH() - getRect()->h, 10, 50, "images/bullet.png", 1, 10);
             ses.add(b);
         }
     }
@@ -99,11 +103,13 @@ public:
 
     void tick()
     {
+        checkCollision(this);
+
         int roll = distribution(generator);
         if (roll == 1)
         {
             Mix_PlayChannel(-1, lazer, 0);
-            Bullet *b = new Bullet(getRect()->x + 20, 120, 10, 50, "images/bullet-down.png", 3, 10);
+            Bullet *b = new Bullet(getRect()->x + 20, getRect()->y + getRect()->h + 1, 10, 50, "images/bullet-down.png", 3, 10);
             ses.add(b);
         }
     }
@@ -134,11 +140,13 @@ public:
             setDirection(2);
         }
 
+        checkCollision(this);
+
         int roll = distribution(generator);
         if (roll == 1)
         {
             Mix_PlayChannel(-1, lazer, 0);
-            Bullet *b = new Bullet(getRect()->x + 20, 200 + 40, 10, 50, "images/bullet-down.png", 3, 10);
+            Bullet *b = new Bullet(getRect()->x + 20, getRect()->y + getRect()->h + 1, 10, 50, "images/bullet-down.png", 3, 10);
             ses.add(b);
         }
     }
@@ -153,7 +161,9 @@ private:
 int main(int argc, char **argv)
 {
     ge.setWindow("Blastar", 1200, 800, 0);
-    ge.setMusic("sounds/8bit-menu-slow.mp3");
+    // ge.setMusic("sounds/8bit-menu-slow.mp3");
+    // ge.setMusic("sounds/8bit-nostalgia-slow.mp3");
+    ge.setMusic("sounds/8bit-forrest.mp3");
 
     Background *bg = new Background(0, 0, ge.getW(), ge.getH(), "images/space.jpg", 3, 1);
     ses.add(bg);

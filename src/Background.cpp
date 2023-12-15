@@ -10,15 +10,6 @@ namespace twoD
 {
     Background::Background(int x, int y, int w, int h, std::string path, int direction, int speed) : MovingSprite(x, y, w, h, path, direction, speed)
     {
-        if (getSpeed() <= 0)
-        {
-            throw std::invalid_argument("Speed needs to be a positive integer!");
-        }
-        if (getDirection() < 1 || getDirection() > 4)
-        {
-            throw std::invalid_argument("Direction needs to be an integer between 1-4!");
-        }
-
         switch (getDirection())
         {
         case 1: // up

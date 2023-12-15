@@ -23,6 +23,8 @@ namespace twoD
     void remove(Sprite *s);
     void run();
 
+    const std::vector<Sprite *> getSprites() { return sprites; }
+
     // void setBackground(std::string path);
     // void setBackground(std::string path, int direction, int speed);
 

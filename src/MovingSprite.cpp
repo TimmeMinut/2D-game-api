@@ -10,13 +10,13 @@ namespace twoD
 {
     MovingSprite::MovingSprite(int x, int y, int w, int h, std::string path, int direction, int speed) : Sprite(x, y, w, h, path)
     {
-        if (speed <= 0)
+        if (speed < 0)
         {
-            throw std::invalid_argument("Speed needs to be a positive integer!");
+            throw std::invalid_argument("MovingSprite:: Speed needs to be a positive integer!");
         }
         if (direction < 1 || direction > 4)
         {
-            throw std::invalid_argument("Direction needs to be an integer between 1-4!");
+            throw std::invalid_argument("MovingSprite:: Direction needs to be an integer between 1-4!");
         }
 
         this->direction = direction;
