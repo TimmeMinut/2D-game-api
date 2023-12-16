@@ -11,11 +11,11 @@
 #include "Session.h"
 #include "Sprite.h"
 #include "MovingSprite.h"
-#include "Background.h"
+#include "BackgroundSprite.h"
 #include "CollisionHandler.h"
 
 /*
-Background::Background()
+BackgroundSprite::BackgroundSprite()
     Directions:
         1 = up
         2 = right
@@ -29,22 +29,6 @@ using namespace twoD;
 
 Session ses(60);
 
-void checkCollision(Sprite* sprite)
-{
-    auto sprites = ses.getSprites();
-    for (Sprite *s : sprites)
-    {
-        if (Bullet *b = dynamic_cast<Bullet *>(s))
-        {
-            if (CollisionHandler::collided(*(b->getRect()), *(s->getRect())))
-            {
-                ses.remove(b);
-                ses.remove(s);
-            }
-        }
-    }
-};
-
 class Bullet : public MovingSprite
 {
 public:
@@ -55,6 +39,25 @@ public:
         MovingSprite::tick();
         if (getRect()->y < -10 || getRect()->y > ge.getH())
             ses.remove(this);
+    }
+
+private:
+    std::string bullet = "bullet";
+};
+
+void checkCollision(Sprite *sprite)
+{
+    auto sprites = ses.getSprites();
+    for (Sprite *s : sprites)
+    {
+        if (Bullet *b = dynamic_cast<Bullet *>(s))
+        {
+            if (CollisionHandler::collided(b->getRect(), sprite->getRect()))
+            {
+                ses.remove(b);
+                ses.remove(sprite);
+            }
+        }
     }
 };
 
@@ -85,14 +88,29 @@ public:
             }
             break;
         case SDLK_SPACE:
-            // play sound and shoot, creating a b object
-            Mix_PlayChannel(-1, lazer, 0);
-            Bullet *b = new Bullet(getRect()->x + 40, ge.getH() - getRect()->h, 10, 50, "images/bullet.png", 1, 10);
-            ses.add(b);
+            if (!pressed)
+            {
+                pressed = true;
+                Mix_PlayChannel(-1, lazer, 0);
+                Bullet *b = new Bullet(getRect()->x + 40, getRect()->y - 51, 10, 50, "images/bullet.png", 1, 10);
+                ses.add(b);
+            }
+        }
+    }
+
+    void keyUp(const SDL_Event &eve)
+    {
+        switch (eve.key.keysym.sym)
+        {
+        case SDLK_SPACE:
+            pressed = false;
         }
     }
 
 private:
+    bool pressed = false;
+
+    std::string player;
     Mix_Chunk *lazer = Mix_LoadWAV((constants::gResPath + "sounds/lazer.wav").c_str());
 };
 
@@ -115,6 +133,8 @@ public:
     }
 
 private:
+    std::string ghost = "Ghost";
+
     std::default_random_engine generator;
     std::uniform_int_distribution<int> distribution;
 
@@ -152,6 +172,8 @@ public:
     }
 
 private:
+    std::string movingGhost = "MovingGhost";
+
     std::default_random_engine generator;
     std::uniform_int_distribution<int> distribution;
 
@@ -165,8 +187,8 @@ int main(int argc, char **argv)
     // ge.setMusic("sounds/8bit-nostalgia-slow.mp3");
     ge.setMusic("sounds/8bit-forrest.mp3");
 
-    Background *bg = new Background(0, 0, ge.getW(), ge.getH(), "images/space.jpg", 3, 1);
-    ses.add(bg);
+    BackgroundSprite *bg = new BackgroundSprite(0, 0, ge.getW(), ge.getH(), "images/space.jpg", 3, 1);
+    ses.add(bg); // TODO: Factory methods for derived sprite classes
 
     Ghost *s1 = new Ghost(ge.getW() * 0.20, 80, 40, 40, "images/red-ghost.png");
     Ghost *s2 = new Ghost(ge.getW() * 0.4, 80, 40, 40, "images/pink-ghost.png");
@@ -185,6 +207,14 @@ int main(int argc, char **argv)
     ses.add(player);
 
     ses.run();
+
+    delete bg;
+    delete s1;
+    delete s2;
+    delete s3;
+    delete s4;
+    delete ms1;
+    delete player;
 
     return 0;
 }

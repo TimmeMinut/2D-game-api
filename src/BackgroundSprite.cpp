@@ -1,14 +1,12 @@
-#include "GameEngine.h"
-#include "Sprite.h"
-#include "MovingSprite.h"
-#include "Background.h"
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "GameEngine.h"
+#include "BackgroundSprite.h"
+
 namespace twoD
 {
-    Background::Background(int x, int y, int w, int h, std::string path, int direction, int speed) : MovingSprite(x, y, w, h, path, direction, speed)
+    BackgroundSprite::BackgroundSprite(int x, int y, int w, int h, std::string path, int direction, int speed) : MovingSprite(x, y, w, h, path, direction, speed)
     {
         switch (getDirection())
         {
@@ -28,13 +26,13 @@ namespace twoD
         }
     }
 
-    void Background::draw() const
+    void BackgroundSprite::draw() const
     {
         SDL_RenderCopy(ge.getRen(), getTexture(), NULL, getRect());
         SDL_RenderCopy(ge.getRen(), getTexture(), NULL, &rect2);
     }
 
-    void Background::tick()
+    void BackgroundSprite::tick()
     {
         switch (getDirection())
         {

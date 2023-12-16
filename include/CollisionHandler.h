@@ -10,10 +10,9 @@ namespace twoD
     class CollisionHandler
     {
     public:
-        static bool collided(const SDL_Rect &rect1, const SDL_Rect &rect2);
+        static bool collided(SDL_Rect *r1, SDL_Rect *r2);
 
     private:
-
     };
 }
 

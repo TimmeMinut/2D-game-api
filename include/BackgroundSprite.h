@@ -1,21 +1,21 @@
-#ifndef BACKGROUND_H
-#define BACKGROUND_H
+#ifndef BACKGROUNDSPRITE_H
+#define BACKGROUNDSPRITE_H
 
 #include <SDL2/SDL.h>
 
 #include <string>
 #include <iostream>
 
+#include "GameEngine.h"
 #include "Sprite.h"
 #include "MovingSprite.h"
-#include "GameEngine.h"
 
 namespace twoD
 {
-    class Background : public MovingSprite
+    class BackgroundSprite : public MovingSprite
     {
     public:
-        Background(int x, int y, int w, int h, std::string path, int direction, int speed);
+        BackgroundSprite(int x, int y, int w, int h, std::string path, int direction, int speed);
 
         void draw() const override;
         void tick() override;

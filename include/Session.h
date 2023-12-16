@@ -25,18 +25,8 @@ namespace twoD
 
     const std::vector<Sprite *> getSprites() { return sprites; }
 
-    // void setBackground(std::string path);
-    // void setBackground(std::string path, int direction, int speed);
-
   private:
     int fps;
-
-    // int bg_direction, bg_speed;
-    // SDL_Texture *bg_tx;
-    // SDL_Rect *bg_rect1;
-    // SDL_Rect *bg_rect2;
-    // void loopBackground();
-
     std::vector<Sprite *> sprites, added, removed;
   };
 }
