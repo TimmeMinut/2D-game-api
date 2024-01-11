@@ -1,25 +1,24 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
-#include "GameEngine.h"
+// #include "System.h"
 #include "BackgroundSprite.h"
 
 namespace twoD
 {
-    BackgroundSprite::BackgroundSprite(int x, int y, int w, int h, std::string path, int direction, int speed) : MovingSprite(x, y, w, h, path, direction, speed)
+    BackgroundSprite::BackgroundSprite(int x, int y, int w, int h, int direction, int speed, std::initializer_list<std::string> ss) : MovingSprite(x, y, w, h, direction, speed, ss)
     {
         switch (getDirection())
         {
-        case 1: // up
+        case UP:
             rect2 = SDL_Rect{0, h, w, h};
             break;
-        case 2: // right
+        case RIGHT:
             rect2 = SDL_Rect{-w, 0, w, h};
             break;
-        case 3: // down
+        case DOWN:
             rect2 = SDL_Rect{0, -h, w, h};
             break;
-        case 4: // left
+        case LEFT:
             rect2 = SDL_Rect{w, 0, w, h};
         default:
             break;
@@ -28,53 +27,53 @@ namespace twoD
 
     void BackgroundSprite::draw() const
     {
-        SDL_RenderCopy(ge.getRen(), getTexture(), NULL, getRect());
-        SDL_RenderCopy(ge.getRen(), getTexture(), NULL, &rect2);
+        SDL_RenderCopy(sys.getRen(), getTexture(), NULL, getRect());
+        SDL_RenderCopy(sys.getRen(), getTexture(), NULL, &rect2);
     }
 
     void BackgroundSprite::tick()
     {
         switch (getDirection())
         {
-        case 1: // up
+        case UP:
             getRect()->y -= getSpeed();
             rect2.y -= getSpeed();
 
-            if (getRect()->y <= -ge.getH())
-                getRect()->y = ge.getH();
+            if (getRect()->y <= -sys.getH())
+                getRect()->y = sys.getH();
 
-            if (rect2.y <= -ge.getH())
-                rect2.y = ge.getH();
+            if (rect2.y <= -sys.getH())
+                rect2.y = sys.getH();
             break;
-        case 2: // right
+        case RIGHT:
             getRect()->x += getSpeed();
             rect2.x += getSpeed();
 
-            if (getRect()->x >= ge.getW())
-                getRect()->x = -ge.getW();
+            if (getRect()->x >= sys.getW())
+                getRect()->x = -sys.getW();
 
-            if (rect2.x >= ge.getW())
-                rect2.x = -ge.getW();
+            if (rect2.x >= sys.getW())
+                rect2.x = -sys.getW();
             break;
-        case 3: // down
+        case DOWN:
             getRect()->y += getSpeed();
             rect2.y += getSpeed();
 
-            if (getRect()->y >= ge.getH())
-                getRect()->y = -ge.getH();
+            if (getRect()->y >= sys.getH())
+                getRect()->y = -sys.getH();
 
-            if (rect2.y >= ge.getH())
-                rect2.y = -ge.getH();
+            if (rect2.y >= sys.getH())
+                rect2.y = -sys.getH();
             break;
-        case 4: // left
+        case LEFT:
             getRect()->x -= getSpeed();
             rect2.x -= getSpeed();
 
-            if (getRect()->x <= -ge.getW())
-                getRect()->x = ge.getW();
+            if (getRect()->x <= -sys.getW())
+                getRect()->x = sys.getW();
 
-            if (rect2.x <= -ge.getW())
-                rect2.x = ge.getW();
+            if (rect2.x <= -sys.getW())
+                rect2.x = sys.getW();
         default:
             break;
         }

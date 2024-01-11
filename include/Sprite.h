@@ -3,8 +3,9 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include <vector>
 
-#include "GameEngine.h"
+#include "System.h"
 
 namespace twoD
 {
@@ -21,12 +22,17 @@ namespace twoD
 
 		SDL_Rect *getRect() const { return rect; }
 		SDL_Texture *getTexture() const { return tx; };
+		void setTexture(std::string path);
+
+		std::vector<std::string> getSpriteSheet() const { return spriteSheet; }
+		void setSpriteSheet(std::initializer_list<std::string> ss) { spriteSheet = ss; }
 
 	protected:
-		Sprite(int x, int y, int w, int h, std::string path);
+		Sprite(int x, int y, int w, int h, std::initializer_list<std::string> ss);
 
 	private:
-		SDL_Rect* rect;
+		SDL_Rect *rect;
+		std::vector<std::string> spriteSheet;
 		SDL_Texture *tx;
 
 		Sprite(const Sprite &) = delete;

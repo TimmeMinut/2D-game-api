@@ -1,22 +1,20 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-#include "GameEngine.h"
 #include "Sprite.h"
 #include "MovingSprite.h"
-#include "Constants.h"
 
 namespace twoD
 {
-    MovingSprite::MovingSprite(int x, int y, int w, int h, std::string path, int direction, int speed) : Sprite(x, y, w, h, path)
+    MovingSprite::MovingSprite(int x, int y, int w, int h, int direction, int speed, std::initializer_list<std::string> ss) : Sprite(x, y, w, h, ss)
     {
         if (speed < 0)
         {
-            throw std::invalid_argument("MovingSprite:: Speed needs to be a positive integer!");
+            throw std::invalid_argument("MovingSprite::speed Needs to be a positive integer!");
         }
-        if (direction < 1 || direction > 4)
+        if (direction < 0 || direction > 3)
         {
-            throw std::invalid_argument("MovingSprite:: Direction needs to be an integer between 1-4!");
+            throw std::invalid_argument("MovingSprite::direction Please use enum UP, DOWN, LEFT, RIGHT");
         }
 
         this->direction = direction;
@@ -37,16 +35,16 @@ namespace twoD
     {
         switch (direction)
         {
-        case 1: // up
+        case UP: 
             getRect()->y -= speed;
             break;
-        case 2: // right
+        case RIGHT: 
             getRect()->x += speed;
             break;
-        case 3: // down
+        case DOWN: 
             getRect()->y += speed;
             break;
-        case 4: // left
+        case LEFT: 
             getRect()->x -= speed;
         default:
             break;

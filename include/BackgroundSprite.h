@@ -6,8 +6,6 @@
 #include <string>
 #include <iostream>
 
-#include "GameEngine.h"
-#include "Sprite.h"
 #include "MovingSprite.h"
 
 namespace twoD
@@ -15,10 +13,15 @@ namespace twoD
     class BackgroundSprite : public MovingSprite
     {
     public:
-        BackgroundSprite(int x, int y, int w, int h, std::string path, int direction, int speed);
-
+        static BackgroundSprite *getInstance(int x, int y, int w, int h, int direction, int speed, std::initializer_list<std::string> ss)
+        {
+            return new BackgroundSprite(x, y, w, h, direction, speed, ss);
+        }
         void draw() const override;
         void tick() override;
+
+    protected:
+        BackgroundSprite(int x, int y, int w, int h, int direction, int speed, std::initializer_list<std::string> ss);
 
     private:
         SDL_Rect rect2;

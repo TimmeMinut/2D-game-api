@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+// #include <SDL2/SDL_mixer.h>
+// #include <SDL2/SDL_ttf.h>
 
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "GameEngine.h"
+#include "System.h"
 #include "Session.h"
 #include "Sprite.h"
 
@@ -67,8 +67,10 @@ namespace twoD
                     for (Sprite *s : sprites)
                         s->keyUp(eve);
                     break;
-                } // switch
-            }     // inre while
+                default:
+                    break;
+                } 
+            }     
 
             // Call tick functions
             for (Sprite *s : sprites)
@@ -97,13 +99,13 @@ namespace twoD
             }
             removed.clear();
 
-            SDL_RenderClear(ge.getRen());
+            SDL_RenderClear(sys.getRen());
 
             // Draw sprites
             for (Sprite *s : sprites)
                 s->draw();
 
-            SDL_RenderPresent(ge.getRen());
+            SDL_RenderPresent(sys.getRen());
 
             int delay = nextTick - SDL_GetTicks();
             if (delay > 0)

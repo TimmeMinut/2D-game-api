@@ -3,8 +3,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "GameEngine.h"
-
 namespace twoD
 {
     class CollisionHandler
