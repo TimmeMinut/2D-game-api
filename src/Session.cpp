@@ -1,7 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-// #include <SDL2/SDL_mixer.h>
-// #include <SDL2/SDL_ttf.h>
 
 #include <string>
 #include <vector>
@@ -9,7 +7,7 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "System.h"
+// #include "System.h"
 #include "Session.h"
 #include "Sprite.h"
 
@@ -23,6 +21,10 @@ namespace twoD
 
     Session::~Session()
     {
+        for (Sprite *s : sprites)
+        {
+            delete s;
+        }
     }
 
     void Session::add(Sprite *s)
@@ -69,19 +71,9 @@ namespace twoD
                     break;
                 default:
                     break;
-                } 
-            }     
+                }
+            }
 
-            // Call tick functions
-            for (Sprite *s : sprites)
-                s->tick();
-
-            // Add new sprites
-            for (Sprite *s : added)
-                sprites.push_back(s);
-            added.clear();
-
-            // Remove sprites
             for (Sprite *s : removed)
             {
                 for (std::vector<Sprite *>::iterator i = sprites.begin(); i != sprites.end();)
@@ -99,9 +91,15 @@ namespace twoD
             }
             removed.clear();
 
+            for (Sprite *s : sprites)
+                s->tick();
+
+            for (Sprite *s : added)
+                sprites.push_back(s);
+            added.clear();
+
             SDL_RenderClear(sys.getRen());
 
-            // Draw sprites
             for (Sprite *s : sprites)
                 s->draw();
 
@@ -110,6 +108,6 @@ namespace twoD
             int delay = nextTick - SDL_GetTicks();
             if (delay > 0)
                 SDL_Delay(delay);
-        } // yttre while
+        }
     }
 }

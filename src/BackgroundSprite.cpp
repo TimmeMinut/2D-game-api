@@ -25,6 +25,8 @@ namespace twoD
         }
     }
 
+    
+
     void BackgroundSprite::draw() const
     {
         SDL_RenderCopy(sys.getRen(), getTexture(), NULL, getRect());

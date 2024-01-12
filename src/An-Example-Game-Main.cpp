@@ -29,6 +29,29 @@ public:
     }
 };
 
+class Explosion : public Sprite
+{
+public:
+    void tick()
+    {
+        if (counter == 45)
+        {
+            ses.remove(this);
+        }
+        else if (counter % 5 == 0)
+        {
+            setTexture(getSpriteSheet()[index]);
+            index++;
+        }
+        counter++;
+    }
+    Explosion(int x, int y, int w, int h, std::initializer_list<std::string> ss) : Sprite(x, y, w, h, ss) {}
+
+private:
+    int counter = 0;
+    int index = 0;
+};
+
 // CHECK COLLISION
 void checkCollision(Sprite *sprite)
 {
@@ -39,8 +62,15 @@ void checkCollision(Sprite *sprite)
         {
             if (CollisionHandler::collided(b->getRect(), sprite->getRect()))
             {
+                Explosion *ex = new Explosion((sprite->getRect()->x) - 20, (sprite->getRect()->y) - 20, 80, 80, 
+                {
+                    "images/explosion-1.png", "images/explosion-2.png", "images/explosion-3.png", 
+                    "images/explosion-4.png", "images/explosion-5.png", "images/explosion-6.png", 
+                    "images/explosion-7.png", "images/explosion-8.png", "images/explosion-9.png"
+                });
                 ses.remove(b);
                 ses.remove(sprite);
+                ses.add(ex);
             }
         }
     }
@@ -115,23 +145,14 @@ private:
     bool moveLeft = false;
     bool moveRight = false;
     int counter = 0;
-
     void handleMovement()
     {
         if (moveLeft)
-        {
             if (getRect()->x > 0)
-            {
                 getRect()->x -= 6;
-            }
-        }
         if (moveRight)
-        {
             if (getRect()->x < sys.getW() - getRect()->w)
-            {
                 getRect()->x += 6;
-            }
-        }
     }
 };
 
@@ -166,15 +187,17 @@ public:
             Bullet *b = new Bullet(getRect()->x + 20, getRect()->y + getRect()->h + 1, 10, 50, DOWN, 10, {"images/bullet-down.png"});
             ses.add(b);
         }
-        if (roll > 1 && roll < 10)
+        if (roll < 5)
         {
-            setTexture(getSpriteSheet()[0]);
-        }
-        else if (roll > 10 && roll < 20)
-        {
-            setTexture(getSpriteSheet()[1]);
+            setTexture(getSpriteSheet()[counter]);
+            counter++;
+            if (counter == 3)
+                counter = 0;
         }
     }
+
+private:
+    int counter = 0;
 };
 
 // MOVINGGHOST
@@ -212,8 +235,17 @@ public:
     }
 };
 
+class Test : public Sprite
+{
+public:
+    void draw() {}
+    void tick() {}
+    Test(int x, int y, int w, int h, std::initializer_list<std::string> ss) : Sprite(x, y, w, h, ss) {}
+};
+
 int main(int argc, char **argv)
 {
+
     sys.setWindow("Blastar", 1200, 800, 0);
 
     sys.setMusic("sounds/8bit-menu-slow.mp3");
@@ -223,10 +255,14 @@ int main(int argc, char **argv)
     BackgroundSprite *bg = BackgroundSprite::getInstance(0, 0, sys.getW(), sys.getH(), DOWN, 1, {"images/space.jpg"});
     ses.add(bg);
 
-    Ghost *s1 = new Ghost(sys.getW() * 0.20, 80, 40, 40, {"images/red-ghost.png", "images/pink-ghost-2.png"});
-    Ghost *s2 = new Ghost(sys.getW() * 0.4, 80, 40, 40, {"images/pink-ghost.png", "images/pink-ghost-2.png"});
-    Ghost *s3 = new Ghost(sys.getW() * 0.6, 80, 40, 40, {"images/yellow-ghost.png", "images/pink-ghost-2.png"});
-    Ghost *s4 = new Ghost(sys.getW() * 0.8, 80, 40, 40, {"images/blue-ghost.png", "images/pink-ghost-2.png"});
+    Ghost *s1 = new Ghost(sys.getW() * 0.20, 80, 40, 40,
+                          {"images/red-ghost.png", "images/red-ghost-2.png", "images/red-ghost-3.png"});
+    Ghost *s2 = new Ghost(sys.getW() * 0.4, 80, 40, 40,
+                          {"images/pink-ghost.png", "images/pink-ghost-2.png", "images/pink-ghost-3.png"});
+    Ghost *s3 = new Ghost(sys.getW() * 0.6, 80, 40, 40,
+                          {"images/yellow-ghost.png", "images/yellow-ghost-2.png", "images/yellow-ghost-2.png"});
+    Ghost *s4 = new Ghost(sys.getW() * 0.8, 80, 40, 40,
+                          {"images/blue-ghost.png", "images/blue-ghost-2.png", "images/blue-ghost-2.png"});
 
     ses.add(s1);
     ses.add(s2);

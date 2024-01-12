@@ -24,6 +24,10 @@ namespace twoD
 
 	System::~System()
 	{
+		for (auto c : sounds)
+		{
+			Mix_FreeChunk(c.second);
+		}
 		Mix_FreeChunk(music);
 		Mix_CloseAudio();
 		TTF_CloseFont(font);

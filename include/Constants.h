@@ -10,6 +10,7 @@ namespace constants
 	//const std::string gResPath = "../../resources/";
     
     //if '/build/debug/resources/' is used, use the following:
+    // Note, seems to be
     const std::string gResPath = "./resources/";
 }
 
